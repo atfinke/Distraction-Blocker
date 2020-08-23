@@ -1,1 +1,3 @@
-# Distraction-Blocker
+# Distraction Blocker
+
+Basic content blocker that syncs via iCloud.
