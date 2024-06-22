@@ -10,11 +10,13 @@ import Foundation
 import SafariServices
 import SwiftUI
 
-class Model: ObservableObject {
+@Observable
+class Model {
     
     // MARK: - Properties -
     
-    @Published private(set) var items = [BlockedItem]()
+    private(set) var items = [BlockedItem]()
+    private(set) var isEnabled = false
     
     private var data: Data? {
         get {
@@ -41,6 +43,14 @@ class Model: ObservableObject {
             selector: #selector(keyValueStoreChanged(_:)),
             name: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
             object: keyValueStore)
+        
+        Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
+            SFContentBlockerManager.getStateOfContentBlocker(withIdentifier: "com.andrewfinke.blocker.extension") { (state, error) in
+                DispatchQueue.main.async {
+                    self.isEnabled = state?.isEnabled ?? false
+                }
+            }
+        }
     }
     
     // MARK: - Helpers -

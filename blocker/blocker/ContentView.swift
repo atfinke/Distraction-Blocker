@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @ObservedObject var model = Model()
+    var model: Model
     
     var body: some View {
         NavigationView {
@@ -20,8 +20,8 @@ struct ContentView: View {
                 }.onDelete { set in
                     self.model.remove(set: set)
                 }
-                }
-            .navigationBarTitle("Block List")
+            }
+            .navigationBarTitle("A.Blocker" + (model.isEnabled ? "": " (Off)"))
             .navigationBarItems(trailing: Button(action: {
                 let controller = UIAlertController(
                     title: "Enter Site",
@@ -33,19 +33,14 @@ struct ContentView: View {
                     self.model.add(site: site)
                 }
                 controller.addAction(action)
-
+                
                 let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
                 controller.addAction(cancelAction)
                 UIApplication.shared.windows.first?.rootViewController?.present(controller, animated: true, completion: nil)
             }, label: {
                 Image(systemName: "plus.circle.fill").foregroundColor(.red)
             }))
-        }.navigationViewStyle(StackNavigationViewStyle())
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
